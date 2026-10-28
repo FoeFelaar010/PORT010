@@ -40,9 +40,14 @@ Goedgekeurd voorstel (ontwerp, inhoudsmodel, rechten, bouwplan): https://claude.
 - Geen Zermelo-exports of secrets in de repo (*.csv, *.xlsx en .env staan in .gitignore).
 
 ## Online zetten
-- Op deze pc staan geen git/node/gh. Repo (voorstel FoeFelaar010/port010) maakt de gebruiker op github.com;
-  Settings → Pages → Source: GitHub Actions.
-- Uploaden via github.com (Add file → Upload files): slepen slaat bestanden met een punt over (.github, .gitignore);
-  die via Add file → Create new file (pad `.github/workflows/deploy.yml`).
-- Lokaal testen deed Claude met een losse Node in `%TEMP%\p010` (buiten OneDrive): kopie van deze map naar `%TEMP%\p010\bouw`,
-  `npm install`, `npm run build`, `vite preview`.
+- Repo https://github.com/FoeFelaar010/PORT010 (openbaar, branch main), live https://foefelaar010.github.io/PORT010/
+  (Pages via GitHub Actions; elke push bouwt en publiceert).
+- Op deze pc staan geen git/node/gh geïnstalleerd. Claude gebruikt losse versies in `C:\Users\j.bonte\AppData\Local\Temp\p010`
+  (node, git, gh; buiten OneDrive, kort pad i.v.m. 260-tekenlimiet). Per PowerShell-sessie:
+  `$k=...\Temp\p010; $env:Path="$k\git\cmd;$k\gh\bin;$k\node\node-v20.18.0-win-x64;"+$env:Path; $env:GH_CONFIG_DIR="$k\ghconfig"; $env:GIT_CONFIG_GLOBAL="$k\gitconfig"`.
+  gh is ingelogd als FoeFelaar010 (scopes repo + workflow).
+- Bouwen/testen: `robocopy` deze map naar `$k\bouw` (zonder node_modules/dist), `npm run build`, preview via
+  `.claude/launch.json` (config "port010") in de MOL-map.
+- Publiceren: `robocopy` deze map naar `$k\repo` met `/MIR /XD node_modules dist .git`, dan `git add -A`, commit, `git push`;
+  run volgen met `gh run watch`. Is `%TEMP%\p010` opgeschoond, dan opnieuw downloaden (eerst toestemming vragen) en
+  `gh auth login --web --scopes workflow` (gebruiker vult code in op github.com/login/device).
