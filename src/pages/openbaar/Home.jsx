@@ -26,7 +26,12 @@ export default function Home() {
             <button type="submit" aria-label="Zoeken"><Icoon naam="zoek" /></button>
           </form>
         </div>
-        <div className="hero-beeld"><img src="./port-icoon.png" alt="" /></div>
+        <ol className="hero-stappen" aria-label="Zo werk je bij PORT">
+          {[['Onderzoeken', 'Wat is het probleem, en voor wie?'], ['Ontwerpen', 'Ideeën schetsen en de beste kiezen'],
+            ['Maken en testen', 'Een prototype bouwen en verbeteren'], ['Presenteren', 'Je oplossing laten zien']].map(([t, u], i) => (
+            <li key={t}><span className="nr">{i + 1}</span><span><b>{t}</b><small>{u}</small></span></li>
+          ))}
+        </ol>
       </section>
 
       <section className="raster drie">

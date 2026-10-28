@@ -48,6 +48,7 @@ function Bovenbalk({ pad }) {
           </>
         )}
         <label className="bekijk-als">
+          <span className="demo-pil" title="Fictieve gegevens, geen inlog. Wijzigingen blijven alleen in deze browser.">Demo</span>
           <span>Bekijk als</span>
           <select id="bekijk-als" value={rol} onChange={(e) => {
             const r = e.target.value
@@ -62,29 +63,18 @@ function Bovenbalk({ pad }) {
   )
 }
 
-function DemoBalk() {
+function Voet() {
   const { acties } = useStore()
   const [bevestig, venster] = useBevestig()
   return (
-    <div className="demobalk">
-      <div className="demobalk-in">
-        <span><b>Demoversie.</b> Fictieve gegevens, geen inlog. Wijzigingen blijven alleen in deze browser.</span>
-        <button onClick={async () => {
-          if (await bevestig('Alle wijzigingen in deze browser wissen en de demo-inhoud terugzetten?', 'Terugzetten', true)) acties.herstelDemo()
-        }}>Demo terugzetten</button>
-      </div>
-      {venster}
-    </div>
-  )
-}
-
-function Voet() {
-  return (
     <footer className="voet">
       <div className="voet-in">
-        <img src="./logo-melanchthon-port.png" alt="" />
         <span>PORT: praktijkgericht onderwijs op Melanchthon Mavo Schiebroek</span>
+        <span className="rechts">Demoversie: fictieve gegevens, alleen bewaard in deze browser · <button onClick={async () => {
+          if (await bevestig('Alle wijzigingen in deze browser wissen en de demo-inhoud terugzetten?', 'Terugzetten', true)) acties.herstelDemo()
+        }}>Demo terugzetten</button></span>
       </div>
+      {venster}
     </footer>
   )
 }
@@ -93,7 +83,6 @@ export function OpenbaarLayout({ pad, children }) {
   return (
     <>
       <Bovenbalk pad={pad} />
-      <DemoBalk />
       <main className="pagina">{children}</main>
       <Voet />
       <Melding />
@@ -108,7 +97,6 @@ export function AppLayout({ gebied, pad, wie, children }) {
   return (
     <>
       <Bovenbalk pad={pad} />
-      <DemoBalk />
       <div className="app">
         <aside className="zijbalk">
           {wie && <div className="wie"><b>{wie[0]}</b><small>{wie[1]}</small></div>}
@@ -122,6 +110,7 @@ export function AppLayout({ gebied, pad, wie, children }) {
         </aside>
         <main className="inhoud">{children}</main>
       </div>
+      <Voet />
       <Melding />
     </>
   )
