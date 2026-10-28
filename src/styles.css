@@ -42,14 +42,21 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .merk { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; flex-shrink: 0; }
 .merk img { height: 40px; width: auto; display: block; }
 .merk span { font-family: var(--f-kop); font-weight: 700; font-size: 1.1rem; letter-spacing: .02em; }
-.hoofdmenu { display: flex; gap: 2px; flex-wrap: wrap; }
-.hoofdmenu a { color: inherit; text-decoration: none; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: .95rem; opacity: .9; }
+.hoofdmenu { display: flex; gap: 2px; }
+.hoofdmenu a { color: inherit; text-decoration: none; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: .95rem; opacity: .9; white-space: nowrap; }
+.balk-rechts { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.demoknop { position: relative; }
+.demoknop-knop { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .3); color: var(--balk-t); border-radius: 9px; padding: 6px 10px; font-weight: 600; font-size: .9rem; cursor: pointer; white-space: nowrap; }
+.demoknop-knop:hover { background: rgba(255, 255, 255, .18); }
+.demopaneel { position: absolute; right: 0; top: calc(100% + 8px); background: var(--wit); color: var(--tekst); border: 1px solid var(--rand); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, .18); padding: 10px; width: 260px; display: flex; flex-direction: column; gap: 2px; z-index: 30; }
+.demopaneel p { font-size: .8rem; padding: 4px 8px; }
+.demopaneel button { display: flex; justify-content: space-between; align-items: center; background: none; border: 0; text-align: left; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: .92rem; }
+.demopaneel button:hover { background: var(--vlak); }
+.demopaneel button.actief { color: var(--paars); background: var(--paars-l); }
+.demopaneel hr { border: 0; border-top: 1px solid var(--rand); margin: 6px 0; width: 100%; }
 .hoofdmenu a:hover { background: rgba(255, 255, 255, .12); opacity: 1; }
 .hoofdmenu a.actief { background: rgba(255, 255, 255, .16); opacity: 1; box-shadow: inset 0 -3px 0 var(--oranje); }
-.bekijk-als { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: .85rem; white-space: nowrap; }
-.bekijk-als select { background: rgba(255, 255, 255, .14); color: var(--balk-t); border: 1px solid rgba(255, 255, 255, .3); border-radius: 8px; padding: 6px 10px; font-weight: 600; }
-.bekijk-als select option { color: #141414; }
-.menuknop { display: none; background: transparent; border: 1px solid rgba(255,255,255,.35); color: inherit; border-radius: 8px; padding: 6px 10px; }
+.menuknop { display: none; background: transparent; border: 1px solid rgba(255,255,255,.35); color: inherit; border-radius: 9px; padding: 6px 12px; font-weight: 600; cursor: pointer; }
 
 .demo-pil { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border: 1px solid rgba(255, 255, 255, .45); border-radius: 99px; padding: 1px 8px; opacity: .85; }
 .voet button { background: none; border: 0; padding: 0; color: inherit; text-decoration: underline; cursor: pointer; font-size: inherit; }
@@ -283,14 +290,19 @@ tr.nu td { background: var(--oranje-l); }
   .hero { grid-template-columns: 1fr; }
   .hero-stappen { display: none; }
   .hero-tekst { padding: 26px; }
-  .hoofdmenu { display: none; width: 100%; flex-direction: column; }
-  .hoofdmenu.open { display: flex; }
-  .menuknop { display: inline-block; }
+  .aanmeldknop { display: none; }
   .bovenbalk-in { flex-wrap: wrap; padding: 8px 16px; }
   .merk img { height: 32px; }
   .pagina { padding: 20px 16px 48px; }
   .sectienav { top: 0; position: static; }
   .blokrij { grid-template-columns: 1fr; }
   .blokrij .acties { flex-direction: row; }
+}
+/* Menu onder een knop zodra het niet meer op één regel past */
+@media (max-width: 1180px) {
+  .bovenbalk-in { flex-wrap: wrap; }
+  .hoofdmenu { display: none; order: 3; width: 100%; flex-direction: column; padding-bottom: 8px; }
+  .hoofdmenu.open { display: flex; }
+  .menuknop { display: inline-block; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

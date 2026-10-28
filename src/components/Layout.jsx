@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Icoon from './Icoon.jsx'
 import { Melding, useBevestig } from './ui.jsx'
 import { useStore } from '../lib/store.jsx'
-import { ROLLEN } from '../lib/rechten.js'
+import { ROLLEN, rolNaam } from '../lib/rechten.js'
 import { ga, href } from '../lib/router.js'
 
 const OPENBAAR_MENU = [
   ['Home', '/'], ['Projecten', '/projecten'], ['Handleidingen', '/handleidingen'],
-  ['Informatiebladen', '/informatiebladen'], ['Vaardigheden', '/vaardigheden'], ['Project aanmelden', '/aanmelden'],
+  ['Informatiebladen', '/informatiebladen'], ['Vaardigheden', '/vaardigheden'],
 ]
 
 // Zijmenu per omgeving: hooguit zes onderdelen.
@@ -29,8 +29,48 @@ export function useMenu(gebied) {
   }[gebied] || []
 }
 
+// Demo: wisselen van omgeving onder één knop. Fase 5 vervangt dit door inloggen.
+function DemoKnop() {
+  const { rol, setRol, acties } = useStore()
+  const [open, setOpen] = useState(false)
+  const [bevestig, venster] = useBevestig()
+  useEffect(() => {
+    if (!open) return
+    const dicht = (e) => { if (!e.target.closest?.('.demoknop')) setOpen(false) }
+    const esc = (e) => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('click', dicht)
+    document.addEventListener('keydown', esc)
+    return () => { document.removeEventListener('click', dicht); document.removeEventListener('keydown', esc) }
+  }, [open])
+  return (
+    <div className="demoknop">
+      <button className="demoknop-knop" aria-expanded={open} aria-haspopup="true" onClick={() => setOpen(!open)}>
+        <span className="demo-pil">Demo</span>{rolNaam(rol)}<Icoon naam="omlaag" maat={16} />
+      </button>
+      {open && (
+        <div className="demopaneel" role="menu">
+          <p className="zacht">Bekijk de portal als:</p>
+          {ROLLEN.map((r) => (
+            <button key={r.id} role="menuitemradio" aria-checked={r.id === rol} className={r.id === rol ? 'actief' : ''}
+              onClick={() => { setRol(r.id); setOpen(false); ga(r.start) }}>
+              {r.naam}{r.id === rol && <Icoon naam="vink" maat={16} />}
+            </button>
+          ))}
+          <hr />
+          <p className="zacht">Fictieve gegevens, geen inlog. Wijzigingen blijven alleen in deze browser.</p>
+          <button onClick={async () => {
+            setOpen(false)
+            if (await bevestig('Alle wijzigingen in deze browser wissen en de demo-inhoud terugzetten?', 'Terugzetten', true)) acties.herstelDemo()
+          }}>Demo terugzetten</button>
+        </div>
+      )}
+      {venster}
+    </div>
+  )
+}
+
 function Bovenbalk({ pad }) {
-  const { rol, setRol } = useStore()
+  const { rol } = useStore()
   const [open, setOpen] = useState(false)
   const actief = (p) => (p === '/' ? pad === '/' : pad.startsWith(p))
   return (
@@ -41,40 +81,28 @@ function Bovenbalk({ pad }) {
         </a>
         {rol === 'bezoeker' && (
           <>
-            <button className="menuknop" onClick={() => setOpen(!open)} aria-expanded={open}>Menu</button>
             <nav className={'hoofdmenu ' + (open ? 'open' : '')} aria-label="Hoofdmenu" onClick={() => setOpen(false)}>
               {OPENBAAR_MENU.map(([t, p]) => <a key={p} href={href(p)} className={actief(p) ? 'actief' : ''}>{t}</a>)}
             </nav>
           </>
         )}
-        <label className="bekijk-als">
-          <span className="demo-pil" title="Fictieve gegevens, geen inlog. Wijzigingen blijven alleen in deze browser.">Demo</span>
-          <span>Bekijk als</span>
-          <select id="bekijk-als" value={rol} onChange={(e) => {
-            const r = e.target.value
-            setRol(r)
-            ga(ROLLEN.find((x) => x.id === r).start)
-          }}>
-            {ROLLEN.map((r) => <option key={r.id} value={r.id}>{r.naam}</option>)}
-          </select>
-        </label>
+        <div className="balk-rechts">
+          {rol === 'bezoeker' && <a className="knop klein aanmeldknop" href={href('/aanmelden')}>Project aanmelden</a>}
+          <DemoKnop />
+          {rol === 'bezoeker' && <button className="menuknop" onClick={() => setOpen(!open)} aria-expanded={open}>Menu</button>}
+        </div>
       </div>
     </header>
   )
 }
 
 function Voet() {
-  const { acties } = useStore()
-  const [bevestig, venster] = useBevestig()
   return (
     <footer className="voet">
       <div className="voet-in">
         <span>PORT: praktijkgericht onderwijs op Melanchthon Mavo Schiebroek</span>
-        <span className="rechts">Demoversie: fictieve gegevens, alleen bewaard in deze browser · <button onClick={async () => {
-          if (await bevestig('Alle wijzigingen in deze browser wissen en de demo-inhoud terugzetten?', 'Terugzetten', true)) acties.herstelDemo()
-        }}>Demo terugzetten</button></span>
+        <span className="rechts">Demoversie: fictieve gegevens, alleen bewaard in deze browser</span>
       </div>
-      {venster}
     </footer>
   )
 }
