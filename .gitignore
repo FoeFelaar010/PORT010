@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+# Nooit echte leerling- of docentgegevens in de (openbare) repo
+*.csv
+*.xlsx
